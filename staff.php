@@ -69,7 +69,7 @@
 					<h5><a href="office_of_the_provost.php">Office of the Provost</a></h5>
 				</div>
 				<div class="border border-1 border-dark rounded p-2 my-1 staff_info" id="board_info">
-					<h5><a href="">Board of Trustees</a></h5>
+					<h5><a href="board_of_trustees.php">Board of Trustees</a></h5>
 				</div>
 			</div>
 		</div>

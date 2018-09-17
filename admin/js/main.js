@@ -266,5 +266,35 @@ $(document).ready(function(){
             $('.helth_care_title_error_message').text("");
         }
     }
-    
+
+    //======================= Staff =========================
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+
+    var activeTab = localStorage.getItem('activeTab');
+
+    console.log(activeTab);
+
+    if (activeTab) {
+        $('a[href="' + activeTab + '"]').tab('show');
+    }
+
+
+    var staff_news_title_error = false;
+    $('#news_title').focusout(function(){
+        check_staff_news_title();
+    });
+
+    function check_staff_news_title(){
+        var staff_news_val = $('#news_title').val();
+        if(staff_news_val == ""){
+            $('.staff_news_title_error_message').text("Please Enter the title");
+            $('.staff_news_title_error_message').css({'color':'#490308'});
+            staff_news_title_error = true;
+        }else{
+            $('.staff_news_title_error_message').text("");
+        }
+    }
 });

@@ -501,7 +501,8 @@ footer a:hover .fa-tumblr-square{
 	  border-right-color: #848444;
 	}
 
-	#home, #beforArrive, #firstDay, #day2Beyond, #triAndComp{
+	#home, #beforArrive, #firstDay, #day2Beyond, #triAndComp, #news, #BordMem, #contract, #allStdUpd, #stdBefArv, #LabSearch, #stdOutsClas, #RecfotDayLif
+	{
 		background-color: #848444;
 		padding: 50px;
 	}
@@ -519,6 +520,65 @@ footer a:hover .fa-tumblr-square{
 	display: none;
 	}
 }
+
+.tursteesBordMem{
+    height: 50vh;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-attachment: fixed;
+    background-size: cover;
+    align-items: center;
+}
+
+/*************************Student***********************************/
+
+.service-box{
+    position: relative;
+    overflow: hidden;
+    perspective:1000px;
+    -webkit-perspective:1000px;
+}
+.service-icon{
+	width: 100%;
+    height: 100px;
+    transition: all .5s ease;
+}
+
+.service-content{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0;
+    width: 100%;
+    height: 100px;
+    transition: all .5s ease;
+    backface-visibility:hidden;
+    transform-style: preserve-3d;
+    -webkit-transform: translateY(110px) rotateX(-90deg);
+    -moz-transform: translateY(110px) rotateX(-90deg);
+    -ms-transform: translateY(110px) rotateX(-90deg);
+    -o-transform: translateY(110px) rotateX(-90deg);
+    transform: translateY(110px) rotateX(-90deg);
+}
+.grey{background-color: #474747;}
+.service-box:hover .service-icon{
+    opacity: 0;
+    -webkit-transform: translateY(-110px) rotateX(90deg);
+    -moz-transform: translateY(-110px) rotateX(90deg);
+    -ms-transform: translateY(-110px) rotateX(90deg);
+    -o-transform: translateY(-110px) rotateX(90deg);
+    transform: translateY(-110px) rotateX(90deg);
+}
+.service-box:hover .service-content {
+    opacity: 1;
+    -webkit-transform: rotateX(0);
+    -moz-transform: rotateX(0);
+    -ms-transform: rotateX(0);
+    -o-transform: rotateX(0);
+    transform: rotateX(0);
+}
+
 
 
 

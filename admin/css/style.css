@@ -3,6 +3,10 @@ body{
 	transition: background 2s;
 }
 
+.nav-item a {
+    color: #000;
+}
+
 /*Div color*/
 .div_big_color{
 	background-color: #6a6a37;

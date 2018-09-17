@@ -42,7 +42,7 @@
 
 					<div class="collapse" id="staffMenu">
 						<ul type="none" class="text-left">
-							<li><a class="pl-2" href="staff_administrative.php">Office of President</a></li>
+							<li><a class="pl-2" href="staff_office_of_the_president.php">Office of President</a></li>
 							<li><a class="pl-2" href="faculty_development_info.php">Office of Provost</a</li>
 							<li><a class="pl-2" href="faculty_helth_care.php">Board of Trustes</a></li>
 							<li><a class="pl-2" href="administrative_policies.php">Administrative Policies</a></li>
