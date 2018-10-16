@@ -1,22 +1,39 @@
- <?php
- 	
-
- ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Faculty Member info</title>
+	<title>Office of the President</title>
+	<script src="ckeditor/ckeditor.js"></script>
+	<?php 
+	include 'require/dbconnection.php';
+	// ==============Global variable===========
+	$student_dep_count = 0;
+	$student_department = "";
+
+	// Insert Student Information
+	if(isset($_POST['Studentinfosubmit'])){
+		$stdsignupID = strtoupper($_POST['stuSignupInfoID']);
+		$sql = "INSERT INTO student_info (department_id, date_of_birth, email) VALUES ('$stdsignupID', '$_POST[stdBirthDateInfo]', '$_POST[stdEmailInfo]')";
+		$stdInfoInsert = $connection->query($sql);
+
+		if(!$stdInfoInsert){
+			echo "Insert Faield:".$connection->error;
+		}else{
+			echo "<script type='text/javascript'>alert('Inserted');</script>";
+		}
+		header('location: student_info.php');
+
+	}
+
+
+ ?>
 <?php
 	include 'include/head.php';
 ?>
-<header class="bg-dark py-3">
-	<h1 class="text-center text-white wow fadeInLeft" data-wow-duration="5s">Faculty infomation right here</h1>
-</header>
+<div class="bg-dark py-3">
+	<h1 class="text-center text-white wow fadeInLeft" data-wow-duration="5s">Student Information
+</div>
 <?php
-	include 'require/dbconnection.php';
 	include 'include/sidenavbar.php';
-	$defFacCon = 0;
-	$dep = "";
  ?>
 <section class="container">
  	<div class="row justify-content-around text-white">
@@ -25,7 +42,7 @@
 		 		<div class="col-md-5 p-0 m-2">
 		 			<?php 
  						// select Total membe
-						$member = "SELECT * FROM faculty_member_info";
+						$member = "SELECT * FROM student_info";
 						$numberOfmember = $connection->query($member);
 						$totalrowcount=mysqli_num_rows($numberOfmember);
  					 ?>
@@ -54,19 +71,19 @@
 		 				<div class="card-body">
 		 					<?php 
 		 						// select by department
-								if(isset($_POST['facnum'])){
+								if(isset($_POST['stdnum'])){
 									$dep = $_POST['Departmentname'];
-									if($dep == ""){
-										$defFacCon = 0;
+									if($student_department == ""){
+										$student_dep_count = 0;
 										echo "<script>alert('Select Department please');</script>";
 									}else{
-										$dep_member = "SELECT * FROM faculty_member_info WHERE department = '$dep'";
-										$depFacMemRes = $connection->query($dep_member);
-									$defFacCon = mysqli_num_rows($depFacMemRes);
+										$dep_member = "SELECT * FROM student_info WHERE department = '$student_department'";
+										$depStdMemRes = $connection->query($dep_member);
+									$student_dep_count = mysqli_num_rows($depStdMemRes);
 									}
 								}
 		 					 ?>
-		 					<form action="faculty_member_info.php" method="post" id="SearchDepFacMember">
+		 					<form action="student_info.php" method="post" id="SearchDepOfStudent">
 		 						<div class="input-group">
 		 							<select class="form-control" name="Departmentname" id="Departmentname">
 										<option value="">--Select--</option>
@@ -85,15 +102,15 @@
 										<option value="BBA">BBA</option>
 									</select>
 		 							<div class="input-group-append">
-		 								<input type="submit" name="facnum" class="btn" value="Search" id="FacSearch">
+		 								<input type="submit" name="stdnum" class="btn" value="Search" id="FacSearch">
 		 							</div>
 		 						</div>
 		 					</form>
 		 					<h4>Faculty member by the Depeartment</h4>
-		 					<h6><?php if($dep != ""){echo $dep." :";} ?></h6>
+		 					<h6><?php if($student_department != ""){echo $student_department." :";} ?></h6>
 		 					<div class="d-flex justify-content-between mt-4">
 		 						<h1><i class="fas fa-chart-pie"></i></h1>
-		 						<h1 class="text-right"><?php echo $defFacCon; ?></h1>
+		 						<h1 class="text-right"><?php echo $student_dep_count; ?></h1>
 		 					</div>
 		 				</div>
 		 			</div>
@@ -101,44 +118,31 @@
 		 	</div>
 		</div>
 		<div class="col-sm-5 m-3 div_color rounded">
-		 	<h4 class="py-2 text-center">Initial infomation of faculty</h4>
-		 	<form action="faculty_member_info.php" method="post" class="p-3" id="facSignUpInfoform">
+		 	<h4 class="py-2 text-center">Initial infomation of Student</h4>
+		 	<form action="student_info.php" method="post" class="p-3" id="stuSignUpInfoform">
 				<div class="form-group">
-					<label for="facsignupInfoID">Faculty ID</label>
-					<input type="text" name="facsignupInfo" id="facsignupInfo" class="form-control">
+					<label for="stuSignupInfoID">Student ID</label>
+					<input type="text" name="stuSignupInfoID" id="stuSignupInfoID" class="form-control">
 					<div class="d-flex justify-content-end">
-						<div class="mb-2 facSignupID_error_message"></div>
+						<div class="mb-2 stuSignupInfoID_error_message"></div>
 					</div>
 
-					<label for="facBirthDateInfo">Birth of Date</label>
-					<input type="date" name="facBirthDateInfo" id="facsignupBirthDateInfo" class="form-control">
+					<label for="stdBirthDateInfo">Birth of Date</label>
+					<input type="date" name="stdBirthDateInfo" id="stdBirthDateInfo" class="form-control">
 					<div class="d-flex justify-content-end">
-						<div class="mb-2 facSignupBirth_error_message"></div>
+						<div class="mb-2 stdSignupBirth_error_message"></div>
 					</div>
 
-					<label for="facEmailInfo">Email</label>
-					<input type="email" name="facsignupEmailInfo" id="facsignupEmailInfo" class="form-control">
+					<label for="stdEmailInfo">Email</label>
+					<input type="email" name="stdEmailInfo" id="stdEmailInfo" class="form-control">
 					<div class="d-flex justify-content-end">
-						<div class="mb-2 facSignupEmail_error_message"></div>
+						<div class="mb-2 stdEmailInfo_error_message"></div>
 					</div>
 					<div class="d-flex justify-content-end my-2">
-						<button type="submit" name="Facultyinfosubmit" class="btn btn-info">Save Info</button>
+						<button type="submit" name="Studentinfosubmit" class="btn btn-info">Save Info</button>
 					</div>
 				</div>
 		 	</form>
-		 	<?php
-		 		if(isset($_POST['Facultyinfosubmit'])){
-		 			$facsignupID = strtoupper($_POST['facsignupInfo']);
-		 		$sql = "INSERT INTO faculty_member_info (department_id, date_of_birth, email) VALUES ('$facsignupID', '$_POST[facBirthDateInfo]', '$_POST[facsignupEmailInfo]')";
-		 		$facinfoInsert = $connection->query($sql);
-
-		 		if(!$facinfoInsert){
-		 			echo "Insert Faield:".$connection->error;
-		 		}else{
-		 			echo "<script type='text/javascript'>alert('Inserted');</script>";
-		 		}
-		 		}
-		 	 ?>
 		</div>
  	</div>
 </section>
@@ -148,9 +152,9 @@
  		<p class="searchWarming my-0"></p>
  		<?php 
 		 		// Select all member
-			$faculty_info = "SELECT * FROM faculty_member_info";
-			$facInfo_result = $connection->query($faculty_info);
-			if ($facInfo_result == false) {
+			$Student_info = "SELECT * FROM student_info";
+			$stdInfo_result = $connection->query($Student_info);
+			if ($stdInfo_result == false) {
 				echo "Selection Faield". $connection->error;
 			}
  		 ?>
@@ -168,7 +172,7 @@
 	 			</tr>
 	 		</thead>
 	 		<tbody>
-	 			<?php while ($row = mysqli_fetch_array($facInfo_result)) {
+	 			<?php while ($row = mysqli_fetch_array($stdInfo_result)) {
  				 ?>
 	 			<tr>
 	 				<td></td>
@@ -185,6 +189,5 @@
 	 	</table>
  	</div>
 </section>
-<?php
-	include 'include/footer.php';
- ?>
+</body>
+</html>

@@ -43,10 +43,27 @@
 					<div class="collapse" id="staffMenu">
 						<ul type="none" class="text-left">
 							<li><a class="pl-2" href="staff_office_of_the_president.php">Office of President</a></li>
-							<li><a class="pl-2" href="faculty_development_info.php">Office of Provost</a</li>
-							<li><a class="pl-2" href="faculty_helth_care.php">Board of Trustes</a></li>
+							<li><a class="pl-2" href="staff_office_of_the_provost.php">Office of the Provost</a></li>
+							<li><a class="pl-2" href="staff_board_of_trustes.php">Board of Trustes</a></li>
 							<li><a class="pl-2" href="administrative_policies.php">Administrative Policies</a></li>
-							<li><a class="pl-2" href="faculty_helth_care.php">Staff Welcome Center</a></li>
+							<li><a class="pl-2" href="staff_welcome_center.php">Staff Welcome Center</a></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<li class="nav-item pl-2">
+						<a class="collapsed" data-toggle="collapse" data-target="#studentmenu" data-parent="nav_accodion">
+							<div class="d-flex justify-content-between">
+								<div>Student</div>
+								<div><i class="fas fa-plus px-2"></i></div>
+							</div>
+						</a>
+					</li>
+
+					<div class="collapse" id="studentmenu">
+						<ul type="none" class="text-left">
+							<li><a class="pl-2" href="student_info.php">Student Infomation</a></li>
+							<li><a class="pl-2" href="student_details.php">Student Details</a></li>
 						</ul>
 					</div>
 				</div>

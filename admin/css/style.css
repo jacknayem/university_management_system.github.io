@@ -71,7 +71,7 @@ body{
 
 /*Search Faculty Information*/
 
-#searchFacultyInfo{
+#searchInfo{
 	width: 20%;
 	border-bottom: 2px solid #c1baba;
 	border-top: 0;
@@ -80,7 +80,7 @@ body{
 	/*background-color: #333;*/
 }
 
-#searchFacultyInfo:focus{
+#searchInfo:focus{
 	 outline-width: 0;
 	 padding: 3px;
 	 caret-color : white;

@@ -12,6 +12,34 @@ $(document).ready(function(){
             });
         });
 
+    // Search Faculty information
+
+    $("#searchInfo").focusin(function(){
+        $(".searchWarming").text("<Exa: CSE05807103>");
+        $(".searchWarming").css({'margin-left':'20%','color':'#e8e9ea','font-size':'12px'});
+    });
+    $("#searchInfo").keyup(function(){
+        var searchval = $('#searchInfo').val();
+        var tr = [];
+
+        $('#table').find('td').each(function(){
+            var value = $(this).html();
+
+            if(value.includes(searchval)){
+                tr.push($(this).closest('tr'));
+            }
+        });
+        if(searchval == ''){
+            $('tr').show();
+        }
+        else{
+            $('tr').not('thead tr').hide();
+            tr.forEach(function(el){
+                el.show();
+            });
+        }
+    });
+
     // Admin side navigation bar
 
     function fullScreenNavBar(){
@@ -297,4 +325,9 @@ $(document).ready(function(){
             $('.staff_news_title_error_message').text("");
         }
     }
+
+
+    $('#pres_edit').click(function(){
+        $('#thm_img').hide();
+    });
 });

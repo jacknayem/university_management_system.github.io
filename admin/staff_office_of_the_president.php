@@ -95,21 +95,206 @@
 	}
 
 	// =================President Speeches=====================
-	if(isset($_POST['presedent_speeches_post'])){
-		$pre_video_url = mysqli_real_escape_string($connection, $_POST['video_src']);
-		$destination = "../images/staff/".$_FILES['thm_img']['name'];
-		$destination_path = "images/staff/".$_FILES['thm_img']['name'];
-		$filename = $_FILES['thm_img']['tmp_name'];
-		if(move_uploaded_file($filename, $destination)){
-			$sql = "INSERT INTO president_spc_writ(img_thum_path, vdo_url) VALUES ('$destination_path', '$pre_video_url')";
-			$pre_spees =  $connection->query($sql);
 
-			if(!$pre_spees){
-				echo "Insert Failed :".$connection->error;
-			}else{
-				echo "Inserted";
+	// Delete
+	if (isset($_GET['pre_spees_delete']) && !empty($_GET['pre_spees_delete'])) {
+		$spees_delete_id = (int)$_GET['pre_spees_delete'];
+
+		$pre_video_info = "SELECT * FROM president_spc_writ WHERE id = $spees_delete_id";
+		$pre_video_info_result = $connection->query($pre_video_info);
+		if ($pre_video_info_result == false) {
+			echo "Selection Faield". $connection->error;
+		}
+		while ($row = mysqli_fetch_array($pre_video_info_result)){
+			$thmimg_del = $row['img_thum_path'];
+			unlink("../".$thmimg_del);
+		}
+
+		$sql_spees_delete = "DELETE FROM president_spc_writ WHERE id = $spees_delete_id";
+		$news_delete = $connection->query($sql_spees_delete);
+		header('location: staff_office_of_the_president.php');
+	}
+
+	// Delete path
+	$thmimg_del = "";
+	// pre_thm_delete
+	if (isset($_GET['pre_thm_delete'])){
+		$spees_delete_id = (int)$_GET['pre_thm_delete'];
+		$pre_thum_img_info = "SELECT * FROM president_spc_writ WHERE id = $spees_delete_id";
+		$pre_thum_img__info_result = $connection->query($pre_thum_img_info);
+		if ($pre_thum_img__info_result == false) {
+			echo "Selection Faield". $connection->error;
+		}
+		while ($row = mysqli_fetch_array($pre_thum_img__info_result)){
+			$thmimg_del = $row['img_thum_path'];
+			unlink("../".$thmimg_del);
+		}
+
+		$sql_spees_delete = "UPDATE president_spc_writ SET img_thum_path = '' WHERE id = $spees_delete_id";
+		$news_delete = $connection->query($sql_spees_delete);
+		header('location: staff_office_of_the_president.php?pre_spees_edit='.$spees_delete_id);
+
+	}
+
+	// edit
+	$destination = "";
+	$destination_path = "";
+	$pre_video_url = "";
+	$pre_spess_edit_id = 0;
+	if (isset($_GET['pre_spees_edit']) && !empty($_GET['pre_spees_edit'])) {
+		$pre_spess_edit_id = (int)$_GET['pre_spees_edit'];
+		$sql_edit = "SELECT * FROM president_spc_writ WHERE id = $pre_spess_edit_id";
+		$pre_spees_res = $connection->query($sql_edit);
+		$edit_post_row = mysqli_fetch_array($pre_spees_res);
+	 }
+
+	 if(isset($_GET['pre_spees_edit'])){
+	 	$destination_path = $edit_post_row['img_thum_path'];
+		$pre_video_url = $edit_post_row['vdo_url'];
+	}else{
+		if(isset($_POST['presedent_speeches_post'])){
+			$file_name = uniqid().date("Y-m-d-H-i-s").str_replace(" ", "_", $_FILES['thm_img']['name']);
+			$destination = "../images/staff/".$file_name;
+			$destination_path = "images/staff/".$file_name;
+			$filename = $_FILES['thm_img']['tmp_name'];
+
+			$pre_video_url = mysqli_real_escape_string($connection, $_POST['video_src']);
+
+			if(move_uploaded_file($filename, $destination)){
+			$sql = "INSERT INTO president_spc_writ(img_thum_path,vdo_url) VALUES ('$destination_path','$pre_video_url')";
+			$p_news = $connection->query($sql);
 			}
 		}
+	}
+	if(isset($_POST['presedent_speeches_post'])){
+
+		$file_name = uniqid().date("Y-m-d-H-i-s").str_replace(" ", "_", $_FILES['thm_img']['name']);
+		$destination = "../images/staff/".$file_name;
+		$destination_path = "images/staff/".$file_name;
+		$filename = $_FILES['thm_img']['tmp_name'];
+
+		$pre_video_url = mysqli_real_escape_string($connection, $_POST['video_src']);
+
+
+		if(isset($_GET['pre_spees_edit'])){
+			$sql = "UPDATE president_spc_writ SET img_thum_path = '$destination_path', vdo_url = '$pre_video_url' WHERE id = $pre_spess_edit_id";
+			if(move_uploaded_file($filename, $destination)){
+			$sql = "UPDATE president_spc_writ SET img_thum_path = '$destination_path', vdo_url = '$pre_video_url' WHERE id = $pre_spess_edit_id";
+			}
+			$p_news = $connection->query($sql);
+		}
+		header('location: staff_office_of_the_president.php');
+	}
+
+	//========================= Past President========================
+	// Delete
+	if (isset($_GET['past_pre_delete']) && !empty($_GET['past_pre_delete'])) {
+		$past_pre_delete_id = (int)$_GET['past_pre_delete'];
+
+		$past_pre_info = "SELECT * FROM past_president WHERE id = $past_pre_delete_id";
+		$past_pre_info_result = $connection->query($past_pre_info);
+		if ($past_pre_info_result == false) {
+			echo "Selection Faield". $connection->error;
+		}
+		while ($row = mysqli_fetch_array($past_pre_info_result)){
+			$thmimg_del = $row['image'];
+			unlink("../".$thmimg_del);
+		}
+
+		$sql_delete = "DELETE FROM past_president WHERE id = $past_pre_delete_id";
+		$past_pre_delete = $connection->query($sql_delete);
+		header('location: staff_office_of_the_president.php');
+	}
+
+	// Delete path
+	$thmimg_del = "";
+	// pre_thm_delete
+	if (isset($_GET['past_pre_thm_delete'])){
+		$past_pre_delete_id = (int)$_GET['past_pre_thm_delete'];
+		echo $past_pre_delete_id;
+		$past_pre_img_info = "SELECT * FROM past_president WHERE id = $past_pre_delete_id";
+		$past_pre_img__info_result = $connection->query($past_pre_img_info);
+		if ($past_pre_img__info_result == false) {
+			echo "Selection Faield". $connection->error;
+		}
+		while ($row = mysqli_fetch_array($past_pre_img__info_result)){
+			$thmimg_del = $row['image'];
+			unlink("../".$thmimg_del);
+		}
+
+		$sql_past_pre_delete = "UPDATE past_president SET image = '' WHERE id = $past_pre_delete_id";
+		$past_pre_delete = $connection->query($sql_past_pre_delete);
+		header('location: staff_office_of_the_president.php?past_pre_edit='.$past_pre_delete_id);
+
+	}
+
+	// edit
+	$past_pre_img_destination = "";
+	$past_pre_img_destination_path = "";
+	$past_pre_name = "";
+	$past_pre_from = "";
+	$past_pre_to = "";
+	$past_pre_description = "";
+	$past_pre_edit_id = 0;
+	if (isset($_GET['past_pre_edit']) && !empty($_GET['past_pre_edit'])) {
+		$past_pre_edit_id = (int)$_GET['past_pre_edit'];
+		$sql_edit = "SELECT * FROM past_president WHERE id = $past_pre_edit_id";
+		$past_pre_res = $connection->query($sql_edit);
+		$edit_post_row = mysqli_fetch_array($past_pre_res);
+	 }
+
+	 if(isset($_GET['past_pre_edit'])){
+		$past_pre_name = $edit_post_row['name'];
+		$past_pre_from = $edit_post_row['from_year'];
+		$past_pre_to = $edit_post_row['to_years'];
+		$past_pre_img_destination_path = $edit_post_row['image'];
+		$past_pre_description = $edit_post_row['description'];
+
+	}else{
+		if(isset($_POST['past_pre_post'])){
+			$file_name = uniqid().date("Y-m-d-H-i-s").str_replace(" ", "_", $_FILES['past_pre_img']['name']);
+			$past_pre_img_destination = "../images/staff/".$file_name;
+			$past_pre_img_destination_path = "images/staff/".$file_name;
+			$filename = $_FILES['past_pre_img']['tmp_name'];
+
+			$past_pre_name = $_POST['past_pre_name'];
+			$past_pre_from = $_POST['from_years'];
+			$past_pre_to = $_POST['to_years'];
+			$past_pre_description = $_POST['editor'];
+
+			if(move_uploaded_file($filename, $past_pre_img_destination)){
+				echo "This is upload<br>";
+			$sql = "INSERT INTO past_president(name,from_year,to_years,image,description) VALUES ('$past_pre_name', '$past_pre_from', '$past_pre_to', '$past_pre_img_destination_path', '$past_pre_description')";
+			$p_news = $connection->query($sql);
+			}
+		}
+	}
+	if(isset($_POST['past_pre_post'])){
+
+		$file_name = uniqid().date("Y-m-d-H-i-s").str_replace(" ", "_", $_FILES['past_pre_img']['name']);
+		$past_pre_img_destination = "../images/staff/".$file_name;
+		$past_pre_img_destination_path = "images/staff/".$file_name;
+		$filename = $_FILES['past_pre_img']['tmp_name'];
+
+		$past_pre_name = $_POST['past_pre_name'];
+		$past_pre_from = $_POST['from_years'];
+		$past_pre_to = $_POST['to_years'];
+		$past_pre_description = $_POST['editor'];
+
+
+		if(isset($_GET['past_pre_edit'])){
+			echo $past_pre_name.'<br>';
+			echo $past_pre_from.'<br>';
+			echo $past_pre_to.'<br>';
+			echo $past_pre_img_destination_path.'<br>';
+			echo $past_pre_description.'<br>';
+			$sql = "UPDATE past_president SET name = '$past_pre_name', from_year = '$past_pre_from', to_years ='$past_pre_to', image = '$past_pre_img_destination_path', description = '$past_pre_description' WHERE id = $past_pre_edit_id";
+			if(move_uploaded_file($filename, $past_pre_img_destination)){
+				$sql = "UPDATE past_president SET name = '$past_pre_name', from_year = '$past_pre_from', to_years ='$past_pre_to', image = '$past_pre_img_destination_path', description = '$past_pre_description' WHERE id = $past_pre_edit_id";
+			}
+			$p_news = $connection->query($sql);
+		}
+		header('location: staff_office_of_the_president.php');
 	}
 
  ?>
@@ -127,77 +312,13 @@
  		<div class="col-sm-12">
  			<div class="my-3" id="president_tabs">
 				<ul class="nav nav-tabs justify-content-around">
-					<li class="nav-item div_color rounded-top"><a href="#home" class="nav-link active" data-toggle="tab">Home</a></li>
-					<li class="nav-item div_color rounded-top"><a href="#newsUpdate" class="nav-link" data-toggle="tab">News &amp; Update</a></li>
+					<li class="nav-item div_color rounded-top"><a href="#newsUpdate" class="nav-link active" data-toggle="tab">News &amp; Update</a></li>
 					<li class="nav-item div_color rounded-top"><a href="#biography" class="nav-link" data-toggle="tab">Biography</a></li>
 					<li class="nav-item div_color rounded-top"><a href="#speechesWritings" class="nav-link" data-toggle="tab">Speeches &amp; Writings</a></li>
 					<li class="nav-item div_color rounded-top"><a href="#pastPresident" class="nav-link" data-toggle="tab">Past President</a></li>
-					<li class="nav-item div_color rounded-top"><a href="#contact" class="nav-link" data-toggle="tab">Contact</a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="px-3 big_div_color tab-pane active" id="home">
-						<div class="row justify-content-around py-2">
-							<div class="col-md-6">
-								<h4 class="p-0 m-0">Letest Message</h4>
-								<div class="div_color p-2 m-1 rounded">
-									<time>17-jun,2018</time>
-									<p>What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-								</div>
-								<h4>Update News</h4>
-								<div class="div_color p-2 m-1 rounded">
-									<div class="d-flex justify-content-start">
-										<div class="pr-3">
-											<img src="images/staff/news_icon.png" alt="News Iocn" class="img-fluid">
-										</div>
-										<div>
-											<h6 class="p-0 m-0">News Title</h6>
-											<time>jan-3,2018</time>
-										    <div class="read-more">
-										      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-										    </div>      
-										</div>
-									</div>
-								</div>
-								<div class="div_color p-2 m-1 rounded">
-									<div class="d-flex justify-content-start">
-										<div class="pr-3">
-											<img src="images/staff/news_icon.png" alt="News Iocn" class="img-fluid">
-										</div>
-										<div>
-											<h6 class="p-0 m-0">News Title</h6>
-											<time>jan-3,2018</time>
-										    <div class="read-more">
-										      Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-										    </div>      
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="div_color rounded p-3">
-									<img src="images/staff/clock_icon.png" alt="Time Shedule" class="img-fluid rounded-circle">
-									<div class="row p-2">
-										<div class="div-md-4">
-											<div>Sunday:</div>
-											<div>Monday:</div>
-											<div>Tuesday:</div>
-											<div>Wednesday:</div>
-											<div>Thursday:</div>
-										</div>
-										<div class="div-md-4 pl-1">
-											<div>8:00 am- 1:00 pm</div>
-											<div>10:00 am- 2:00 pm</div>
-											<div>10:00 am- 2:00 pm</div>
-											<div>10:00 am- 2:00 pm</div>
-											<div>10:00 am- 2:00 pm</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="py-3 big_div_color tab-pane fade" id="newsUpdate">
+					<div class="py-3 big_div_color tab-pane fade show active" id="newsUpdate">
 						<div class="row justify-content-center">
 							<div class="col-sm-8">
 					 			<div>
@@ -321,181 +442,206 @@
 					</div>
 
 					<div class="p-3 big_div_color tab-pane fade" id="speechesWritings">
-
 						<div class="row justify-content-center">
 							<div class="col-sm-8">
 					 			<div>
-					 				<h2 class="text-center text-white">President Speeches</h2>
+					 				<h2 class="text-center text-white">President speeches</h2>
 					 			</div>
-					 			<form action="staff_office_of_the_president.php" method="post" enctype="multipart/form-data" class="div_color text-white p-4 rounded">
+					 			<form action="staff_office_of_the_president.php<?=((isset($_GET['pre_spees_edit']))?'?pre_spees_edit='.$pre_spess_edit_id:'');?>" method="post" enctype="multipart/form-data" class="div_color text-white p-4 rounded">
+
 					 				<div class="form-group">
-										<label for="thm_img"><?=(isset($_GET['pres_edit'])?'Edit':'');?> Thum image</label>
+					 					<label for="thm_img"><?=(isset($_GET['pre_spees_edit'])?'Edit':'');?> Thum image</label>
 					 					<input type="file" name="thm_img" class="form-control" id="thm_img">
 					 					<div class="d-flex justify-content-end">
 					 						<small class="thm_img_error_message"></small>
 					 					</div>
+					 					<?php 
+						 					if(isset($_GET['pre_spees_edit'])){
+						 					$pre_spess_edit_id = (int)$_GET['pre_spees_edit'];
+											$sql_edit = "SELECT * FROM president_spc_writ WHERE id = $pre_spess_edit_id";
+											$pre_spees_res = $connection->query($sql_edit);
+											$edit_post_row = mysqli_fetch_array($pre_spees_res);
+											if($edit_post_row['img_thum_path'] == ''){}else{
+										?>
+										<div class="form-group" id="pre_img_hide">
+					 						<div class="d-flex justify-content-start">
+						 						<div><img src="../<?=$destination_path?>" width="150px" height="100px"></div>
+						 						<div>
+						 							<a href="?pre_thm_delete=<?=$_GET['pre_spees_edit']?>" class="btn aDesign" id="pre_thm_delete"><i class="fas fa-trash-alt"></i></a>
+						 						</div>
+					 						</div>
+						 				</div>
+										<?php
+												}
+											}
+					 					  ?>
 					 				</div>
 					 				<div class="form-group">
-					 					<label for="presedent_name"><?=(isset($_GET['pres_edit'])?'Edit':'Insert');?> Video URL </label>
-					 					<input type="text" name="video_src" class="form-control" id="video_src" placeholder="video source">
+					 					<label for="news_title"><?=(isset($_GET['pre_spees_edit'])?'Edit':'');?> Link</label>
+					 					<input type="text" name="video_src" class="form-control" id="video_src" placeholder="Enter video source link" value="<?=$pre_video_url?>">
 					 					<div class="d-flex justify-content-end">
-					 						<small class="pre_video_src_error_message"></small>
+					 						<small class="staff_news_title_error_message"></small>
 					 					</div>
 					 				</div>
 					 				<div class="d-flex justify-content-between">
-					 					<?php if(isset($_GET['pres_edit'])): ?>
+					 					<?php if(isset($_GET['pre_spees_edit'])): ?>
 					 						<div><a href="staff_office_of_the_president.php" class="btn btn-danger">Close</a></div>
 					 					<?php endif; ?>
-					 					<div><input type="submit" name="presedent_speeches_post" id="presedent_details_post" value="<?=((isset($_GET['pres_edit']))?'Edit':'Add');?> Post" class="btn btn-success btn-block"></div>
+					 					<div><input type="submit" name="presedent_speeches_post" id="presedent_speeches_post" value="<?=((isset($_GET['pre_spees_edit']))?'Edit':'Add');?> Post" class="btn btn-success btn-block"></div>
 					 				</div>
 					 			</form>
-
-					 			<div class="my-3 accodion" id="accodion">
-								 	<h2 class="text-center text-white">President Speeches</h2>
-								<?php
-
-									$sql = "SELECT * FROM president_spc_writ";
-									$pre_result = $connection->query($sql);
-									if(!$pre_result){
-										echo "Fetch Failed :".$connection->error;
-									}else{
-										if(mysqli_num_rows($pre_result) > 0){
-											while ($row = mysqli_fetch_array($pre_result)) {
-								?>
-												 	<div class="my-1">
-												 		<div class="d-flex justify-content-between px-3 div_color" data-toggle="collapse" data-target="#bio_<?= $row['id']; ?>" data-parent=".accodion">
-												 			<div>
-												 				<a href="?bio_edit=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-edit"></i></a>
-												 				<a href="?bio_delete=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-trash-alt"></i></a>
-												 			</div>
-													 		<div>Hello</div>
-													 		<div><i class="fas fa-plus px-2"></i></div>
-													 	</div>
-													 	<div class="collapse mx-5 div_collaple  p-3" id="bio_<?= $row['id']; ?>">
-													 		<img src="../<?= $row['img_thum_path']; ?>">
-
-													 		<iframe class="embed-responsive-item" src="<?= $row['vdo_url']; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-													 		</div>
-												 	</div>
-								<?php					
-								 				}
-								 			}
-								 		}
-								?>
-								 </div>
 							</div>
 						</div>
-
-
-
-						<h3>President Speeches</h3>
-						  <div class="row">
-						    <div class="col-sm-6">
-						      <div class="presidentVideo embed-responsive embed-responsive-16by9">
-						        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/EY37Tq2cj7o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						      </div>
-						      <div class="presidentVideo d-none embed-responsive embed-responsive-16by9">
-						        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/qIRjytgNuhM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						      </div>
-						      <div class="presidentVideo d-none embed-responsive embed-responsive-16by9">
-						        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/gulzQ_2IyfI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						      </div>
-						      <div class="presidentVideo d-none embed-responsive embed-responsive-16by9">
-						        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/2OOsEjCyaEw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-						      </div>
-						    </div>
-						  </div>
-						<div class="row mt-2">
-					  		<div class="col-3 videoThum active">
-					  			<img src=" images/staff/president_video1.jpg" alt="president_video1" class="speeches img-fluid rounded">
-					  		</div>
-					  		<div class="col-3 videoThum">
-					  			<img src=" images/staff/president_video2.jpg" alt="president_video2" class="speeches img-fluid rounded">
-					  		</div>
-					  		<div class="col-3 videoThum">
-					  			<img src=" images/staff/president_video3.jpg" alt="president_video3" class="speeches img-fluid rounded">
-					  		</div>
-					  		<div class="col-3 videoThum">
-					  			<img src=" images/staff/president_video4.jpg" alt="president_video4" class="speeches img-fluid rounded">
-					  		</div>
-					  	</div>
+						<div class="m-2">
+						 	<div class="tableScroller div_color rounded p-3">
+						 		<?php 
+								 		// Select all video
+									$faculty_info = "SELECT * FROM president_spc_writ";
+									$facInfo_result = $connection->query($faculty_info);
+									if ($facInfo_result == false) {
+										echo "Selection Faield". $connection->error;
+									}
+						 		 ?>
+						 		<table class="table table-dark table-bordered table-striped rounded my-3 class="text-center"" id="pre_spc_table">
+							 		<thead>
+							 			<tr>
+							 				<td></td>
+							 				<th>ID</th>
+							 				<th>Image Thumbnail</th>
+							 				<th>Video</th>
+							 				<th></th>
+							 			</tr>
+							 		</thead>
+							 		<tbody>
+							 			<?php while ($row = mysqli_fetch_array($facInfo_result)) {
+						 				 ?>
+							 			<tr>
+							 				<td><a href="?pre_spees_edit=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-edit"></i></a></td>
+							 				<td><?= $row['id'];?></td>
+							 				<td><img src="../<?= $row['img_thum_path']; ?>" width="200px" height="100px"></td>
+							 				<td><iframe class="embed-responsive-item" src="<?= $row['vdo_url']; ?>" width="200" height="100" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></td>
+									        <td><a href="?pre_spees_delete=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-trash-alt"></i></a></td>
+							 			</tr>
+							 			<?php } ?>
+							 		</tbody>
+							 	</table>
+						 	</div>
+						</div>
 					</div>
 
 					<div class="px-3 big_div_color tab-pane fade" id="pastPresident">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="past-president">
-									<div class="past-president-item rounded left">
-										<div class="content">
-											<h4>2008</h4>
-											<figure>
-												<img src="images/staff/past_president1.jpg" alt="Past President" class="img-fluid rounded-circle">
-												<figcaption class="text-center text-muted pt-2"><i>Name: Shohan</i></figcaption>
-											</figure>
-											<p class="text-justify">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-										</div>
-									</div>
-									<div class="past-president-item rounded right">
-										<div class="content">
-											<h4>1995</h4>
-											<figure>
-												<img src="images/staff/past_president2.jpg" alt="Past President" class="img-fluid rounded-circle">
-												<figcaption class="text-center text-muted pt-2"><i>Name: Shohan</i></figcaption>
-											</figure>
-											<p class="text-justify">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-										</div>
-									</div>
-									<div class="past-president-item rounded left">
-										<div class="content">
-											<h4>1993</h4>
-											<figure>
-												<img src="images/staff/past_president3.jpg" alt="Past President" class="img-fluid rounded-circle">
-												<figcaption class="text-center text-muted pt-2"><i>Name: Shohan</i></figcaption>
-											</figure>
-											<p class="text-justify">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-										</div>
-									</div>
-									<div class="past-president-item rounded right">
-										<div class="content">
-											<h4>1990</h4>
-											<figure>
-												<img src="images/staff/past_president4.jpg" alt="Past President" class="img-fluid rounded-circle">
-												<figcaption class="text-center text-muted pt-2"><i>Name: Shohan</i></figcaption>
-											</figure>
-											<p class="text-justify">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-										</div>
-									</div>
-								</div>
+						<div class="row justify-content-center">
+							<div class="col-sm-8">
+					 			<div>
+					 				<h2 class="text-center text-white">Past President</h2>
+					 			</div>
+					 			<form action="staff_office_of_the_president.php<?=((isset($_GET['past_pre_edit']))?'?past_pre_edit='.$past_pre_edit_id:'');?>" method="post" enctype="multipart/form-data" class="div_color text-white p-4 rounded">
+
+					 				<div class="form-group">
+					 					<label for="past_pre_name"><?=(isset($_GET['past_pre_edit'])?'Edit':'');?> Name: </label>
+					 					<input type="text" name="past_pre_name" class="form-control" id="past_pre_name" placeholder="President Name" value="<?=$past_pre_name?>">
+					 					<div class="d-flex justify-content-end">
+					 						<small class="staff_news_title_error_message"></small>
+					 					</div>
+					 				</div>
+
+
+					 				<div class="form-group">
+					 					<div class="row justify-content-between">
+					 						<div class="col-md-6">
+					 							<label for="news_title"><?=(isset($_GET['past_pre_edit'])?'Edit':'');?> From years: </label>
+					 							<input type="number" name="from_years" class="form-control" id="from_years" placeholder="Starting Years" value="<?=$past_pre_from?>">
+					 						</div>
+					 						<div class="col-md-6">
+					 							<label for="to_years"><?=(isset($_GET['past_pre_edit'])?'Edit':'');?> To: </label>
+					 							<input type="number" name="to_years" class="form-control" id="to_years" placeholder="Ending Years" value="<?=$past_pre_to?>"></div>
+					 					</div>
+					 					<div class="d-flex justify-content-end">
+					 						<small class="staff_news_title_error_message"></small>
+					 					</div>
+					 				</div>
+
+					 				<div class="form-group">
+					 					<label for="past_pre_img"><?=(isset($_GET['past_pre_edit'])?'Edit':'');?> Thum image</label>
+					 					<input type="file" name="past_pre_img" class="form-control" id="past_pre_img">
+					 					<div class="d-flex justify-content-end">
+					 						<small class="thm_img_error_message"></small>
+					 					</div>
+					 					<?php 
+						 					if(isset($_GET['past_pre_edit'])){
+						 					$past_pre_edit_id = (int)$_GET['past_pre_edit'];
+											$sql_edit = "SELECT * FROM past_president WHERE id = $past_pre_edit_id";
+											$past_pre_res = $connection->query($sql_edit);
+											$edit_post_row = mysqli_fetch_array($past_pre_res);
+											if($edit_post_row['image'] == ''){}else{
+										?>
+										<div class="form-group" id="pre_img_hide">
+					 						<div class="d-flex justify-content-start">
+						 						<div><img src="../<?=$past_pre_img_destination_path?>" width="150px" height="100px"></div>
+						 						<div>
+						 							<a href="?past_pre_thm_delete=<?=$_GET['past_pre_edit']?>" class="btn aDesign" id="past_pre_thm_delete"><i class="fas fa-trash-alt"></i></a>
+						 						</div>
+					 						</div>
+						 				</div>
+										<?php
+												}
+											}
+					 					  ?>
+					 				</div>
+
+					 				<div class="form-group">
+					 					<label for="news_title"><?=(isset($_GET['past_pre_edit'])?'Edit':'');?> Description :</label>
+					 					<textarea class="ckeditor" name="editor" id="past_pre_description"><?php echo $past_pre_description?></textarea>
+					 					<div class="d-flex">
+					 						<small class="staff_news_body_error_message"></small>
+					 					</div>
+					 				</div>
+
+					 				<div class="d-flex justify-content-between">
+					 					<?php if(isset($_GET['past_pre_edit'])): ?>
+					 						<div><a href="staff_office_of_the_president.php" class="btn btn-danger">Close</a></div>
+					 					<?php endif; ?>
+					 					<div><input type="submit" name="past_pre_post" id="past_pre_post" value="<?=((isset($_GET['past_pre_edit']))?'Edit':'Add');?> Post" class="btn btn-success btn-block"></div>
+					 				</div>
+					 			</form>
 							</div>
 						</div>
-					</div>
-					<div class="px-3 big_div_color tab-pane fade" id="contact">
-						<div class="row justify-content-center">
-							<div class="col-md-2 pl-5 pt-5">
-								<img src="images/staff/message_icon.png" alt="Contract Info icon" class="img-fluid rounded-circle contact-info mt-5 mr-0 ml-5 pb-0">
+						<div class="my-3 accodion" id="accodion">
+							 <h2 class="text-center text-white">Past President</h2>
+							<?php
 
-								<img src="images/staff/call_icon.png" alt="Contract Info icon" class="img-fluid rounded-circle contact-info mt-3 mr-0 ml-3">
-
-								<img src="images/staff/email_icon.png" alt="Contract Info icon" class="img-fluid rounded-circle contact-info mt-3 mr-0 ml-3">
-
-								<img src="images/staff/location_icon.png" alt="Contract Info icon" class="img-fluid rounded-circle contact-info mt-3 mr-0 ml-5 pt-0">
-							</div>
-							<div class="col-md-7 pl-0">
-								<img src="images/staff/contract_box.png" alt="Contract Box" class="img-fluid" id="contact-info-box">
-								<!-- <div class="image-caption ">Fax: 789065</div>
-								<div class="image-caption ">Office Number: +8877777</div>
-								<div class="image-caption ">Email : message@info.university.com</div> -->
-								<div class="image-caption ">
-									<address>
-										Fax: 789065<br>
-										Office Number: +8877777<br>
-										Email : message@info.university.com <br>
-										University of exaple<br>
-										203, A-Building, Roman<br>
-										Dhaka, Bangladesh
-									</address>
-								</div>
-							</div>
+								$past_pre_info = "SELECT * FROM past_president";
+								$past_pre_result = $connection->query($past_pre_info);
+								if ($past_pre_result == false) {
+									echo "Selection Faield". $connection->error;
+								}else{
+									if(mysqli_num_rows($past_pre_result) > 0){
+										while ($row = mysqli_fetch_array($past_pre_result)) {
+							?>
+										 	<div class="my-1">
+										 		<div class="d-flex justify-content-between px-3 div_color" data-toggle="collapse" data-target="#bio_<?= $row['id']; ?>" data-parent=".accodion">
+										 			<div>
+										 				<a href="?past_pre_edit=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-edit"></i></a>
+										 				<a href="?past_pre_delete=<?= $row['id']; ?>" class="btn aDesign"><i class="fas fa-trash-alt"></i></a>
+										 			</div>
+											 		<div><?=$row['name'];?></div>
+											 		<div><i class="fas fa-plus px-2"></i></div>
+											 	</div>
+											 	<div class="collapse mx-5 div_collaple  p-3" id="bio_<?= $row['id']; ?>">
+											 		<div class="row">
+											 			<div class="col-md-12">
+					 										<h2><i><?= $row['from_year'];?>-<?= $row['to_years'];?></i></h2>
+											 				<img src="../<?= $row['image']; ?>" class="rounded">
+											 				<div><?= $row['description']; ?></div>
+											 			</div>
+											 		</div>
+											 	</div>
+										 	</div>
+							<?php					
+						 				}
+						 			}
+						 		}
+							?>
 						</div>
 					</div>
 				</div>
